@@ -49,21 +49,24 @@ The script:
 
 1. Builds the app and copies it to `~/Applications/Claude Notifier.app`.
 2. Copies the hook scripts to `~/.claude/hooks/`.
-3. Adds two hooks to `~/.claude/settings.json`, only if they are not there yet. It saves a backup of the file first.
-4. Starts the app.
+3. Copies the default sounds to `~/.claude/hooks/sounds/<event>/Default.m4a`.
+4. Adds two hooks to `~/.claude/settings.json`, only if they are not there yet. It saves a backup of the file first.
+5. Starts the app.
 
 Then **restart Claude Code**, because it reads hooks only at startup. You can check that they are loaded with `/hooks`.
 
 To start the app at login, turn on **Open at login** in the panel.
 
-### Add your sounds
+### Sounds
 
-Put audio files in `~/.claude/hooks/sounds/`, or use the **+** button in the panel. By default the app looks for:
+Each event comes with a sound called **Default**:
 
-- `~/.claude/hooks/sounds/input.m4a` for **Needs input**
-- `~/.claude/hooks/sounds/done.m4a` for **Response done**
+- `~/.claude/hooks/sounds/input/Default.m4a` for **Needs input**
+- `~/.claude/hooks/sounds/done/Default.m4a` for **Response done**
 
-If a file is missing, the panel shows it as "(missing)". Pick another sound there, for example one of the macOS sounds.
+The Default sound is also the fallback. If the sound you picked is deleted or moved, the Default plays instead, and the panel shows it as "(missing), plays Default".
+
+To use your own sounds, put audio files in `~/.claude/hooks/sounds/` or use the **+** button in the panel. Don't put them in the `input/` or `done/` folders: `install.sh` overwrites the Default files there.
 
 ## How it works
 
@@ -113,8 +116,8 @@ The hooks added to `~/.claude/settings.json` look like this:
   "soundWhenWatching": false,
   "volume": 0.3,
   "events": {
-    "input": { "enabled": true, "sound": "/Users/you/.claude/hooks/sounds/input.m4a" },
-    "done":  { "enabled": true, "sound": "/Users/you/.claude/hooks/sounds/done.m4a" }
+    "input": { "enabled": true, "sound": "/Users/you/.claude/hooks/sounds/input/Default.m4a" },
+    "done":  { "enabled": true, "sound": "/Users/you/.claude/hooks/sounds/done/Default.m4a" }
   }
 }
 ```
@@ -127,7 +130,7 @@ The hooks added to `~/.claude/settings.json` look like this:
 | `soundWhenWatching` | Also play the sound when you are looking at the Claude tab. Banners are never shown in that case. |
 | `volume` | `0.0` to `1.0`, relative to the system volume. |
 | `events.<name>.enabled` | Turn one event on or off. |
-| `events.<name>.sound` | Full path to the sound file. |
+| `events.<name>.sound` | Full path to the sound file. If it is empty or the file is missing, `sounds/<name>/Default.m4a` plays. |
 
 ## Troubleshooting
 
@@ -163,7 +166,7 @@ echo '{"cwd":"'$PWD'"}' | ITERM_SESSION_ID=test ~/.claude/hooks/notify.sh "Test"
 scripts/uninstall.sh
 ```
 
-This removes the app, the hook scripts and the hooks in `~/.claude/settings.json` (with a backup). Your sounds and `notify.json` stay in `~/.claude/hooks/`.
+This removes the app, the hook scripts, the Default sounds and the hooks in `~/.claude/settings.json` (with a backup). Your own sounds and `notify.json` stay in `~/.claude/hooks/`.
 
 ## Development
 
@@ -184,4 +187,5 @@ Code layout:
 | `Sources/ClaudeNotifier/LoginItem.swift` | Open at login |
 | `hooks/notify.sh` | The Claude Code hook |
 | `hooks/focus-iterm.sh` | Focuses the iTerm2 tab on banner click |
+| `sounds/<event>/Default.m4a` | Default sound for each event |
 | `scripts/` | Build, install and uninstall |
