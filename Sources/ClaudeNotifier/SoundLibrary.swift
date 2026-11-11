@@ -27,7 +27,21 @@ final class SoundLibrary: ObservableObject {
     }
 
     func contains(_ path: String) -> Bool {
-        mySounds.contains { $0.path == path } || systemSounds.contains { $0.path == path }
+        hasDefault(path)
+            || mySounds.contains { $0.path == path }
+            || systemSounds.contains { $0.path == path }
+    }
+
+    /// True if `path` is the default sound of some event and the file exists.
+    func hasDefault(_ path: String) -> Bool {
+        NotifyEvent.allCases.contains { $0.defaultSound == path }
+            && FileManager.default.fileExists(atPath: path)
+    }
+
+    /// The sound that will really play for `event`: the chosen one, or the
+    /// default if the chosen file is missing. Same rule as notify.sh.
+    func playablePath(_ path: String, for event: NotifyEvent) -> String {
+        FileManager.default.fileExists(atPath: path) ? path : event.defaultSound
     }
 
     func play(_ path: String, volume: Double) {

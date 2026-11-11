@@ -96,6 +96,9 @@ struct EventRow: View {
                     if !library.contains(config.wrappedValue.sound) {
                         Text(missingLabel).tag(config.wrappedValue.sound)
                     }
+                    if library.hasDefault(event.defaultSound) {
+                        Text("Default").tag(event.defaultSound)
+                    }
                     Section("My sounds") {
                         ForEach(library.mySounds) { Text($0.name).tag($0.path) }
                     }
@@ -106,7 +109,8 @@ struct EventRow: View {
                 .labelsHidden()
 
                 Button {
-                    library.play(config.wrappedValue.sound, volume: store.config.volume)
+                    library.play(library.playablePath(config.wrappedValue.sound, for: event),
+                                 volume: store.config.volume)
                 } label: {
                     Image(systemName: "play.fill")
                 }
@@ -125,7 +129,9 @@ struct EventRow: View {
 
     private var missingLabel: String {
         let sound = config.wrappedValue.sound
-        if sound.isEmpty { return "No sound chosen" }
-        return "\(URL(fileURLWithPath: sound).deletingPathExtension().lastPathComponent) (missing)"
+        let name = sound.isEmpty
+            ? "No sound chosen"
+            : "\(URL(fileURLWithPath: sound).deletingPathExtension().lastPathComponent) (missing)"
+        return library.hasDefault(event.defaultSound) ? "\(name), plays Default" : name
     }
 }

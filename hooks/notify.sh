@@ -29,7 +29,8 @@ IFS=$'\t' read -r enabled sound_on banner_on sound_watching volume ev_on sound <
 
 [ "${enabled:-true}" = "true" ] || exit 0
 [ "${ev_on:-true}" = "true" ] || exit 0
-sound="${sound:-$HOME/.claude/hooks/sounds/$event.m4a}"
+# Fall back to the default sound when none is chosen or the file is gone.
+[ -n "$sound" ] && [ -f "$sound" ] || sound="$HOME/.claude/hooks/sounds/$event/Default.m4a"
 
 project=$(basename "$(jq -r '.cwd // empty' <<<"$input" 2>/dev/null)")
 msg=$(jq -r '.message // empty' <<<"$input" 2>/dev/null)
