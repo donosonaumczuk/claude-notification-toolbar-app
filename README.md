@@ -6,8 +6,8 @@ When Claude finishes an answer, or stops to ask for permission, you hear a sound
 
 The menu bar icon lets you change everything without editing files:
 
-- **Left click** opens the settings panel.
-- **Right click** turns all notifications on or off.
+- **Left click** turns all notifications on or off.
+- **Right click** (or Control-click) opens the settings panel.
 
 > This is a personal project. It is not made by or affiliated with Anthropic.
 
@@ -177,7 +177,7 @@ Code layout:
 
 | Path | What it does |
 |---|---|
-| `Sources/ClaudeNotifier/main.swift` | Menu bar icon, left and right click |
+| `Sources/ClaudeNotifier/main.swift` | Menu bar icon: left click toggles, right click opens the panel |
 | `Sources/ClaudeNotifier/PanelView.swift` | Settings panel (SwiftUI) |
 | `Sources/ClaudeNotifier/Config.swift` | `notify.json` model, load and save |
 | `Sources/ClaudeNotifier/SoundLibrary.swift` | Sound list, preview, import |

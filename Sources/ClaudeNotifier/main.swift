@@ -2,8 +2,8 @@ import AppKit
 import Combine
 import SwiftUI
 
-/// Menu bar icon. Left click opens the settings panel, right click (or
-/// Control-click) turns all notifications on or off.
+/// Menu bar icon. Left click turns all notifications on or off, right click
+/// (or Control-click) opens the settings panel.
 @MainActor
 final class AppDelegate: NSObject, NSApplicationDelegate {
     private let store = ConfigStore()
@@ -39,7 +39,8 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
     @objc private func statusItemClicked(_ sender: NSStatusBarButton) {
         let event = NSApp.currentEvent
         let isRightClick = event?.type == .rightMouseUp || event?.modifierFlags.contains(.control) == true
-        if isRightClick {
+        if !isRightClick {
+            if popover.isShown { popover.performClose(nil) }
             store.config.enabled.toggle()
             return
         }
@@ -61,7 +62,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         let image = NSImage(systemSymbolName: name, accessibilityDescription: label)
         image?.isTemplate = true
         statusItem.button?.image = image
-        statusItem.button?.toolTip = "\(label)\nLeft-click: settings · Right-click: turn on/off"
+        statusItem.button?.toolTip = "\(label)\nLeft-click: turn on/off · Right-click: settings"
     }
 }
 

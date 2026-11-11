@@ -1,6 +1,6 @@
 import SwiftUI
 
-/// The settings panel shown when you left-click the menu bar icon.
+/// The settings panel shown when you right-click the menu bar icon.
 struct PanelView: View {
     @EnvironmentObject var store: ConfigStore
     @EnvironmentObject var library: SoundLibrary
@@ -63,7 +63,7 @@ struct PanelView: View {
             }
             .controlSize(.small)
 
-            Text("Right-click the menu bar icon to turn everything on or off.")
+            Text("Left-click the menu bar icon to turn everything on or off.")
                 .font(.caption)
                 .foregroundStyle(.secondary)
         }
