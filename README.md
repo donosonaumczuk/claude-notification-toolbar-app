@@ -9,6 +9,13 @@ The menu bar icon lets you change everything without editing files:
 - **Left click** turns all notifications on or off.
 - **Right click** (or Control-click) opens the settings panel.
 
+<p align="center">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="docs/panel-dark.png">
+    <img src="docs/panel-light.png" alt="The Claude Notifier settings panel" width="340">
+  </picture>
+</p>
+
 > This is a personal project. It is not made by or affiliated with Anthropic.
 
 ## Features
@@ -188,4 +195,5 @@ Code layout:
 | `hooks/notify.sh` | The Claude Code hook |
 | `hooks/focus-iterm.sh` | Focuses the iTerm2 tab on banner click |
 | `sounds/<event>/Default.m4a` | Default sound for each event |
+| `docs/` | Screenshots for this README |
 | `scripts/` | Build, install and uninstall |
