@@ -2,7 +2,8 @@
 # Installs Claude Notifier:
 #   1. builds the app and copies it to ~/Applications
 #   2. copies the hook scripts to ~/.claude/hooks
-#   3. adds the Stop and Notification hooks to ~/.claude/settings.json
+#   3. copies the default sounds to ~/.claude/hooks/sounds/<event>/Default.m4a
+#   4. adds the Stop and Notification hooks to ~/.claude/settings.json
 #      (only if they are not there yet; a backup is made first)
 set -euo pipefail
 cd "$(dirname "$0")/.."
@@ -42,6 +43,14 @@ mkdir -p "$HOOKS/sounds"
 install -m 755 hooks/notify.sh hooks/focus-iterm.sh "$HOOKS/"
 echo "Installed notify.sh and focus-iterm.sh"
 
+step "Installing the default sounds to $HOOKS/sounds"
+for dir in sounds/*/; do
+  event=$(basename "$dir")
+  mkdir -p "$HOOKS/sounds/$event"
+  install -m 644 "$dir/Default.m4a" "$HOOKS/sounds/$event/Default.m4a"
+  echo "Installed sounds/$event/Default.m4a"
+done
+
 step "Adding the hooks to $SETTINGS"
 [ -f "$SETTINGS" ] || echo '{}' > "$SETTINGS"
 if grep -q 'hooks/notify.sh' "$SETTINGS"; then
@@ -70,7 +79,8 @@ cat <<'EOF'
 
 Done. Next steps:
   - Restart Claude Code so it loads the hooks.
-  - Put your sounds in ~/.claude/hooks/sounds, or pick macOS sounds in the panel.
+  - Default sounds are set up. To use your own, put them in ~/.claude/hooks/sounds
+    or use the + button in the panel.
   - The first banner may ask for notification permission. If no banners show,
     see "Troubleshooting" in the README.
 EOF

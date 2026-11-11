@@ -8,7 +8,12 @@ SETTINGS="$HOME/.claude/settings.json"
 pkill -x ClaudeNotifier 2>/dev/null || true
 rm -rf "$HOME/Applications/Claude Notifier.app"
 rm -f "$HOOKS/notify.sh" "$HOOKS/focus-iterm.sh"
-echo "Removed the app and the hook scripts"
+for f in "$HOOKS"/sounds/*/Default.m4a; do
+  [ -f "$f" ] || continue
+  rm -f "$f"
+  rmdir "$(dirname "$f")" 2>/dev/null || true   # only if now empty
+done
+echo "Removed the app, the hook scripts and the default sounds"
 
 if [ -f "$SETTINGS" ] && grep -q 'hooks/notify.sh' "$SETTINGS"; then
   backup="$SETTINGS.backup-$(date +%Y%m%d-%H%M%S)"
@@ -26,4 +31,4 @@ if [ -f "$SETTINGS" ] && grep -q 'hooks/notify.sh' "$SETTINGS"; then
   echo "Removed the hooks from $SETTINGS (backup: $backup)"
 fi
 
-echo "Kept $HOOKS/sounds and $HOOKS/notify.json. Delete them by hand if you want."
+echo "Kept your sounds in $HOOKS/sounds and $HOOKS/notify.json. Delete them by hand if you want."

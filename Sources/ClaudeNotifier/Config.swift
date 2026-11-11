@@ -31,8 +31,10 @@ enum NotifyEvent: String, CaseIterable, Identifiable {
         }
     }
 
+    /// The sound shipped with the app for this event, installed by scripts/install.sh.
+    /// notify.sh uses the same path when the chosen sound is missing.
     var defaultSound: String {
-        Paths.sounds.appendingPathComponent("\(rawValue).m4a").path
+        Paths.sounds.appendingPathComponent("\(rawValue)/Default.m4a").path
     }
 }
 
